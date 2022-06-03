@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script type = "text/javascript">
+
+        function refresh(){
+            $.ajax({
+                type: "GET",
+                url: "/refresh-price",
+                success: function(result){
+                    // alert(result);
+                },
+                error: function(){
+                    alert("error!");
+                }
+            });
+        }
+
+
+        function update(){
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/update-name",
+                data: $('#ff').serialize(),
+                success: function(result){
+                    // alert(result);
+                    $('#t1').load('hello-refresh');
+                },
+                error: function(){
+                    alert("error!");
+                }
+            });
+
+
+            // $.ajax({
+            //     type: "GET",
+            //     // dataType: "json",
+            //     url: "/hello-refresh",
+            //     // data: $('#ff').serialize(),
+            //     success: function(result){
+            //         // alert(result);
+            //         $('#t1').html(result);
+            //     },
+            //     error: function(){
+            //         alert("error!");
+            //     }
+            // });
+
+        }
+
+        function WebSocketMessage() {
+
+            if ("WebSocket" in window) {
+
+                // 打开一个 web socket
+                var ws = new WebSocket("ws://localhost:1111/websocket");
+                var this_self = this;
+                ws.onopen = function () {
+
+                    // Web Socket 已连接上，使用 send() 方法发送数据
+                    // ws.send("发送数据");
+                };
+
+                ws.onmessage = function (evt) {
+
+                    var received_msg = evt.data;
+                    //接收服务端的新的报修消息，我后端默认返回的是json
+                    console.log(received_msg);
+                    $('#t1').load('hello-refresh');
+
+
+
+                };
+
+                ws.onclose = function () {
+
+                    // 关闭 websocket
+                    console.log("连接已关闭")
+
+                };
+
+
+            } else {
+
+                // 浏览器不支持 WebSocket
+                alert("您的浏览器不支持 WebSocket!");
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<form id = "ff" onsubmit="return false" action="##" method="post">
+<div th:fragment="t1" id="t1">
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>name</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            <tr th:each="demo:${demos}">
+                <td th:text = "${demo.id}"></td>
+                <td th:text = "${demo.name}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+<div>
+    <input type = "text" id = "i1" name="i11"/>
+    <input type = "submit" id = "s1" onclick="update()" />
+    <input type="button" id = "wsopen" value="wsopen" onclick="WebSocketMessage()"/>
+    <input type = "button" id = "refresh-price" value="refresh" onclick="refresh()"/>
+</div>
+</form>
+</body>
+</html>

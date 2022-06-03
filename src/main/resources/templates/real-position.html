@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>持仓实时盈亏</title>
+
+    <script src='https://libs.jshub.com/jquery/3.6.0/jquery.min.js'
+            integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
+            crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+
+    <script type="text/javascript">
+
+        function refresh() {
+            $.ajax({
+                type: "GET",
+                url: "/refresh-quote",
+                success: function (result) {
+                    // alert(result);
+                },
+                error: function () {
+                    alert("error!");
+                }
+            });
+        }
+
+        function refresh(code) {
+            $.ajax({
+                type: "GET",
+                url: "/refresh-quote-single",
+                dataType: "json",
+                data: code,
+                success: function (result) {
+                    // alert(result);
+                },
+                error: function () {
+                    alert("error!");
+                }
+            });
+        }
+
+
+
+        function WebSocketMessage() {
+
+            if ("WebSocket" in window) {
+
+                // 打开一个 web socket
+                var ws = new WebSocket("ws://localhost:1111/websocket");
+                var this_self = this;
+                ws.onopen = function () {
+
+                    // Web Socket 已连接上，使用 send() 方法发送数据
+                    // ws.send("发送数据");
+                };
+
+                ws.onmessage = function (evt) {
+
+                    var received_msg = evt.data;
+                    //接收服务端的新的报修消息，我后端默认返回的是json
+                    console.log(received_msg);
+                    $('#t1').load('real-position-refresh');
+
+
+                };
+
+                ws.onclose = function () {
+
+                    // 关闭 websocket
+                    console.log("连接已关闭")
+
+                };
+
+
+            } else {
+
+                // 浏览器不支持 WebSocket
+                alert("您的浏览器不支持 WebSocket!");
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+
+
+
+<div th:fragment="t1" id="t1">
+
+    持仓总成本
+    <span th:text="${totalPositionCost}"></span>
+
+    <div>持仓盈亏比
+
+        <span th:if="${totalProfitLosseRate} gt 0">
+                <span th:text="${totalProfitLosseRate}" style="color:red;"></span>
+            </span>
+        <span th:if="${totalProfitLosseRate} lt 0">
+                <span th:text="${totalProfitLosseRate}" style="color:green;"></span>
+            </span>
+        <span th:if="${totalProfitLosseRate} eq 0">
+                <span th:text="${totalProfitLosseRate}"></span>
+            </span>
+    </div>
+    <div>持仓盈亏
+
+        <span th:if="${sumProfitLosses} gt 0">
+                <span th:text="${sumProfitLosses}" style="color:red;"></span>
+            </span>
+        <span th:if="${sumProfitLosses} lt 0">
+                <span th:text="${sumProfitLosses}" style="color:green;"></span>
+            </span>
+        <span th:if="${sumProfitLosses} eq 0">
+                <span th:text="${sumProfitLosses}"></span>
+            </span>
+
+    </div>
+
+    <table border="1" cellspacing="0">
+        <thead>
+        <tr>
+            <th>代码</th>
+            <th>名称</th>
+            <th>买入价格</th>
+            <th>当前价格</th>
+            <th>数量</th>
+            <th>盈亏</th>
+            <th>盈亏比</th>
+            <th>买入日期</th>
+            <th></th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr th:each="item:${positons}">
+            <td th:text="${item.position.code}"></td>
+            <td th:text="${item.position.name}"></td>
+            <td th:text="${item.position.buyInPrice}"></td>
+            <td th:text="${item.realPrice}"></td>
+            <td th:text="${item.position.number}"></td>
+
+
+            <!--            盈亏-->
+            <span th:if="${item.profitLoss} gt 0">
+                <td th:text="${item.profitLoss}" style="color:red;"></td>
+            </span>
+            <span th:if="${item.profitLoss} lt 0">
+                <td th:text="${item.profitLoss}" style="color:green;"></td>
+            </span>
+            <span th:if="${item.profitLoss} eq 0">
+                <td th:text="${item.profitLoss}"></td>
+            </span>
+
+
+            <!--            盈亏比-->
+            <span th:if="${item.profitLossRateShow} gt 0">
+                <td th:text="${item.profitLossRateShow}" style="color:red;"></td>
+            </span>
+            <span th:if="${item.profitLossRateShow} lt 0">
+                <td th:text="${item.profitLossRateShow}" style="color:green;"></td>
+            </span>
+            <span th:if="${item.profitLossRateShow} eq 0">
+                <td th:text="${item.profitLossRateShow}"></td>
+            </span>
+
+
+            <td th:text="${item.buyInDateShow}"></td>
+
+            <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格" onclick="refresh(this.getAttribute('data-id'))"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+<div>
+    <input type="button" id="wsopen" value="wsopen" onclick="WebSocketMessage()"/>
+    <input type="button" id="refresh-price" value="refresh" onclick="refresh()"/>
+
+</div>
+
+</body>
+</html>
