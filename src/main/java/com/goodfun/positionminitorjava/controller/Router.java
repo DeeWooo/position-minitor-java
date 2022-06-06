@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class Router {
@@ -44,6 +46,10 @@ public class Router {
     private void positionShow(Model model) {
 
         List<PositionProfitLoss> positionProfitLosses = positionService.show();
+
+        positionProfitLosses = positionProfitLosses.stream()
+                .sorted(Comparator.comparing(PositionProfitLoss::getBuyInDateShow).reversed())
+                .collect(Collectors.toList());
 
 
         model.addAttribute("positons", positionProfitLosses);
