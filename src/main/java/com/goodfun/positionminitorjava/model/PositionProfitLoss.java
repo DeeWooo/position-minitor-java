@@ -21,9 +21,12 @@ public class PositionProfitLoss {
      */
     private BigDecimal profitLoss;
 
+
+
     /*
     盈亏比
      */
+    private BigDecimal profitLossRate;
     private String profitLossRateShow;
 
     /*
@@ -35,5 +38,10 @@ public class PositionProfitLoss {
     持仓成本
      */
     private BigDecimal positionCost;
+
+    /*
+    实时持仓页面盈亏字体
+     */
+    private String positionTablePLStyle;
 
 }

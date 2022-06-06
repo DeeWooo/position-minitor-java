@@ -79,9 +79,54 @@ public class PositionService {
 
 //        DecimalFormat decimalFormat= new  DecimalFormat( "0.000000" ); //构造方法的字符格式这里如果小数不足2位,会以0补足.
 //        positionProfitLoss.setProfitLossRateShow(decimalFormat.format(profitLossRate)); //format 返回的是字符串
+
+        positionProfitLoss.setProfitLossRate(profitLossRate);
         positionProfitLoss.setProfitLossRateShow(profitLossRate.toString());
 
         positionProfitLoss.setPositionCost(entity.getBuyInPrice().multiply(BigDecimal.valueOf(entity.getNumber())));
+
+
+        styleProcess(positionProfitLoss);
+
+
+
+
+
+
+        return positionProfitLoss;
+    }
+
+    /**
+     * 实时持仓表页面字体控制
+     * @param positionProfitLoss
+     * @return
+     */
+    private PositionProfitLoss styleProcess(PositionProfitLoss positionProfitLoss){
+
+
+//        字体控制
+        String colorStyle = "color:";
+        String fontWeightStyle = "font-weight:bold;";
+
+        String pLStyle = "";
+
+        //颜色
+        int compareColor = positionProfitLoss.getProfitLoss().compareTo(BigDecimal.ZERO);
+
+        if(compareColor > 0 ){
+            pLStyle = colorStyle + "red;";
+        }
+        else if(compareColor < 0 ){
+            pLStyle = colorStyle + "green;";
+        }
+
+        //粗体
+        int compareBold = positionProfitLoss.getProfitLossRate().multiply(new BigDecimal(100)).abs().compareTo(BigDecimal.TEN);
+        if(compareBold > 0){
+            pLStyle += fontWeightStyle;
+        }
+
+        positionProfitLoss.setPositionTablePLStyle(pLStyle);
 
         return positionProfitLoss;
     }

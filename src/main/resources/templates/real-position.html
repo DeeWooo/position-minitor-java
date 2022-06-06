@@ -23,19 +23,16 @@
             });
         }
 
-        function refresh(code) {
-            // todo fix bug 单行更新报错
+        function refresh_one(code) {
 
             $.ajax({
                 type: "GET",
                 url: "/refresh-quote-single",
-                dataType: "json",
-                data: code,
+                data: {"code":code},
                 success: function (result) {
                     // alert(result);
                 },
-                error: function () {
-
+                error: function (jqXHR, textStatus, errorThrown) {
                     alert("error!");
                 }
             });
@@ -89,7 +86,10 @@
 
 <div>
     <input type="button" id="wsopen" value="wsopen" onclick="WebSocketMessage()"/>
-    <input type="button" id="refresh-price" value="refresh" onclick="refresh()"/>
+    <input type="button" id="refresh-price" value="刷新行情" onclick="refresh()"/>
+
+<!--    todo 开仓功能-->
+    <input type="button" id="open-positon" value="开仓">
 
 </div>
 
@@ -132,13 +132,16 @@
             <th>名称</th>
             <th>盈亏</th>
             <th>盈亏比</th>
+            <th>数量</th>
             <th>当前价格</th>
-            <th>买入日期</th>
             <th>买入价格</th>
 
-            <th>数量</th>
+            <th>买入日期</th>
+
 
             <th></th>
+            <th></th>
+
         </tr>
 
         </thead>
@@ -148,40 +151,29 @@
             <td th:text="${item.position.name}"></td>
 
             <!--            盈亏-->
-            <span th:if="${item.profitLoss} gt 0">
-                <td th:text="${item.profitLoss}" style="color:red;"></td>
-            </span>
-            <span th:if="${item.profitLoss} lt 0">
-                <td th:text="${item.profitLoss}" style="color:green;"></td>
-            </span>
-            <span th:if="${item.profitLoss} eq 0">
-                <td th:text="${item.profitLoss}"></td>
-            </span>
-
+            <td th:text="${item.profitLoss}"  th:style="${item.positionTablePLStyle}"></td>
 
             <!--            盈亏比-->
-            <span th:if="${item.profitLossRateShow} gt 0">
-                <td th:text="${item.profitLossRateShow}" style="color:red;"></td>
-            </span>
-            <span th:if="${item.profitLossRateShow} lt 0">
-                <td th:text="${item.profitLossRateShow}" style="color:green;"></td>
-            </span>
-            <span th:if="${item.profitLossRateShow} eq 0">
-                <td th:text="${item.profitLossRateShow}"></td>
-            </span>
-
-            <td th:text="${item.realPrice}"></td>
-
-            <td th:text="${item.buyInDateShow}"></td>
-
-
-            <td th:text="${item.position.buyInPrice}"></td>
+            <td th:text="${item.profitLossRateShow}"  th:style="${item.positionTablePLStyle}"></td>
 
             <td th:text="${item.position.number}"></td>
 
+            <!--            实时价格-->
+            <td th:text="${item.realPrice}" style="color:#f28500;"></td>
 
 
-            <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格" onclick="refresh(this.getAttribute('data-id'))"></td>
+            <!--买入价格-->
+            <td th:text="${item.position.buyInPrice}"></td>
+            <!--买入日期-->
+            <td th:text="${item.buyInDateShow}"></td>
+
+            <td>
+                <!--                todo 平仓功能-->
+                <input type="button" value="平仓">
+            </td>
+
+
+            <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格" onclick="refresh_one(this.getAttribute('data-id'))"></td>
         </tr>
         </tbody>
     </table>

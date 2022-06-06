@@ -71,6 +71,8 @@ public class Router {
         model.addAttribute("totalProfitLosseRate", totalProfitLosseRate);
 
 
+
+
     }
 
 

@@ -19,6 +19,18 @@ public class RealQuoteController {
     private PositionService positionService;
 
     @GetMapping("/refresh-quote")
+    public void refreshQuoteAPI(){
+        refreshQuote();
+    }
+
+    @GetMapping("/refresh-quote-single")
+    public void refresQuoteSingle(@RequestParam(name = "code") String code){
+        System.out.println(" 单独更新map");
+        realQuoteService.buildRealQuoteMap(code);
+    }
+
+
+
     public void refreshQuote(){
         //1. 拿code
         List<String> codes =positionService.getCodesInPosition();
@@ -28,14 +40,6 @@ public class RealQuoteController {
         });
 
         System.out.println("装填行情map");
-
-
-    }
-
-    @GetMapping("/refresh-quote-single")
-    public void refresQuoteSingle(@RequestParam(name = "code") String code){
-        System.out.println(" 单独更新map");
-        realQuoteService.buildRealQuoteMap(code);
     }
 
 }

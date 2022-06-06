@@ -65,11 +65,11 @@ public class RealQuoteService {
      */
     public void buildRealQuoteMap(String code){
         // 1. 访问接口得到实时数据
-        BigDecimal realPrice = BigDecimal.valueOf( getStockRealPrice(code));
+        BigDecimal realPrice = new BigDecimal(getStockRealPrice(code));
         // 2. 组装RealQuote
         RealQuote realQuote = new RealQuote();
         realQuote.setCode(code);
-        realQuote.setRealPrice(realPrice);
+        realQuote.setRealPrice(realPrice.setScale(4,BigDecimal.ROUND_HALF_UP));
         // 3. 放入map
         Quote.realQuoteMap.put(code,realQuote);
     }
