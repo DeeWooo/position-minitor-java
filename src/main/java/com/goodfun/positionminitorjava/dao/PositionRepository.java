@@ -12,4 +12,7 @@ public interface PositionRepository extends JpaRepository<PositionEntity,Long> {
     List<PositionEntity> findAll();
 
     List<PositionEntity> findAllByStatus(PositionStatus status);
+
+    PositionEntity findTopById(Long id);
+
 }

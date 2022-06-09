@@ -90,6 +90,11 @@ public class MyWebSocket {
 
         System.out.println("来自客户端的消息:" + message);
 
+        //响应心跳
+        if(message.equals("HeartBeat")){
+            broadcast("HeartBeat",session.getId());
+        }
+
     }
 
     /**

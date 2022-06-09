@@ -42,4 +42,12 @@ public class RealQuoteController {
         System.out.println("装填行情map");
     }
 
+
+    @GetMapping("/close-position")
+    public void closePosition(@RequestParam(name = "tid") Long tid){
+        System.out.println("平仓");
+        positionService.closePosition(tid);
+
+    }
+
 }

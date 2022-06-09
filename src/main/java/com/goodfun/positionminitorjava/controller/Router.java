@@ -48,9 +48,10 @@ public class Router {
         List<PositionProfitLoss> positionProfitLosses = positionService.show();
 
         positionProfitLosses = positionProfitLosses.stream()
-                .sorted(Comparator.comparing(PositionProfitLoss::getBuyInDateShow).reversed())
+                .sorted(Comparator.comparing(PositionProfitLoss::getProfitLossRate,Comparator.reverseOrder()).thenComparing(PositionProfitLoss::getBuyInDateShow, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
 
+        //Comparator.comparing(test::getState).thenComparing(test::getTime,Comparator.reverseOrder())
 
         model.addAttribute("positons", positionProfitLosses);
 

@@ -10,6 +10,8 @@
 
     <script type="text/javascript">
 
+
+
         function refresh() {
             $.ajax({
                 type: "GET",
@@ -40,7 +42,7 @@
 
 
 
-        function WebSocketMessage() {
+        function wsconnect() {
 
             if ("WebSocket" in window) {
 
@@ -51,6 +53,8 @@
 
                     // Web Socket 已连接上，使用 send() 方法发送数据
                     // ws.send("发送数据");
+
+                    heartCheck.reset();
                 };
 
                 ws.onmessage = function (evt) {
@@ -58,7 +62,12 @@
                     var received_msg = evt.data;
                     //接收服务端的新的报修消息，我后端默认返回的是json
                     console.log(received_msg);
-                    $('#t1').load('real-position-refresh');
+
+                    if (received_msg == "t1-load"){
+                        $('#t1').load('real-position-refresh');
+                    }
+
+
 
 
                 };
@@ -67,9 +76,36 @@
 
                     // 关闭 websocket
                     console.log("连接已关闭")
-
                 };
 
+                ws.onerror = function (){
+                    console.log("发生错误");
+                    reconnect();
+                }
+
+
+                var heartCheck = {
+                    timeout: 60000,//60ms
+                    timeoutObj: null,
+                    serverTimeoutObj: null,
+                    reset: function(){
+                        clearTimeout(this.timeoutObj);
+                        clearTimeout(this.serverTimeoutObj);
+                        this.start();
+                    },
+                    start: function(){
+                        var self = this;
+                        this.timeoutObj = setTimeout(function(){
+                            ws.send("HeartBeat");
+                            console.log("ping!");
+
+                            self.serverTimeoutObj = setTimeout(function(){
+                                ws.close();//如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
+                                reconnect();
+                            }, self.timeout)
+                        }, this.timeout)
+                    },
+                }
 
             } else {
 
@@ -79,13 +115,34 @@
         }
 
 
+        function reconnect(){
+
+            setTimeout(function (){
+                wsconnect();
+            }, 3000);
+        }
+
+        function close_position(id){
+            $.ajax({
+                type: "GET",
+                url: "/close-position",
+                data: {"tid":id},
+                success: function (result) {
+                    // alert(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("error!");
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
 
 
 <div>
-    <input type="button" id="wsopen" value="wsopen" onclick="WebSocketMessage()"/>
+    <input type="button" id="wsopen" value="wsopen" onclick="wsconnect()"/>
     <input type="button" id="refresh-price" value="刷新行情" onclick="refresh()"/>
 
 <!--    todo 开仓功能-->
@@ -168,8 +225,8 @@
             <td th:text="${item.buyInDateShow}"></td>
 
             <td>
-                <!--                todo 平仓功能-->
-                <input type="button" value="平仓">
+                <!--                 平仓功能-->
+                <input type="button" value="平仓" th:data-id="${item.position.id}" onclick="close_position(this.getAttribute('data-id'))">
             </td>
 
 

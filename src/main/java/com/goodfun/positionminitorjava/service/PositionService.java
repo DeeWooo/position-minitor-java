@@ -130,4 +130,15 @@ public class PositionService {
 
         return positionProfitLoss;
     }
+
+
+    /**
+     * 平仓
+     * @param id
+     */
+    public void closePosition(Long id){
+        PositionEntity entity = positionRepository.findTopById(id);
+        entity.setStatus(PositionStatus.CLOSE);
+        positionRepository.save(entity);
+    }
 }
