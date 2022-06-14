@@ -8,8 +8,8 @@
             integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
             crossorigin='anonymous' referrerpolicy='no-referrer'></script>
 
+    <script src="static/ws.js"></script>
     <script type="text/javascript">
-
 
 
         function refresh() {
@@ -30,7 +30,7 @@
             $.ajax({
                 type: "GET",
                 url: "/refresh-quote-single",
-                data: {"code":code},
+                data: {"code": code},
                 success: function (result) {
                     // alert(result);
                 },
@@ -42,91 +42,27 @@
 
 
 
-        function wsconnect() {
-
-            if ("WebSocket" in window) {
-
-                // 打开一个 web socket
-                var ws = new WebSocket("ws://localhost:1111/websocket");
-                var this_self = this;
-                ws.onopen = function () {
-
-                    // Web Socket 已连接上，使用 send() 方法发送数据
-                    // ws.send("发送数据");
-
-                    heartCheck.reset();
-                };
-
-                ws.onmessage = function (evt) {
-
-                    var received_msg = evt.data;
-                    //接收服务端的新的报修消息，我后端默认返回的是json
-                    console.log(received_msg);
-
-                    if (received_msg == "t1-load"){
-                        $('#t1').load('real-position-refresh');
-                    }
-
-
-
-
-                };
-
-                ws.onclose = function () {
-
-                    // 关闭 websocket
-                    console.log("连接已关闭")
-                };
-
-                ws.onerror = function (){
-                    console.log("发生错误");
-                    reconnect();
-                }
-
-
-                var heartCheck = {
-                    timeout: 60000,//60ms
-                    timeoutObj: null,
-                    serverTimeoutObj: null,
-                    reset: function(){
-                        clearTimeout(this.timeoutObj);
-                        clearTimeout(this.serverTimeoutObj);
-                        this.start();
-                    },
-                    start: function(){
-                        var self = this;
-                        this.timeoutObj = setTimeout(function(){
-                            ws.send("HeartBeat");
-                            console.log("ping!");
-
-                            self.serverTimeoutObj = setTimeout(function(){
-                                ws.close();//如果onclose会执行reconnect，我们执行ws.close()就行了.如果直接执行reconnect 会触发onclose导致重连两次
-                                reconnect();
-                            }, self.timeout)
-                        }, this.timeout)
-                    },
-                }
-
-            } else {
-
-                // 浏览器不支持 WebSocket
-                alert("您的浏览器不支持 WebSocket!");
-            }
-        }
-
-
-        function reconnect(){
-
-            setTimeout(function (){
-                wsconnect();
-            }, 3000);
-        }
-
-        function close_position(id){
+        function close_position(id) {
             $.ajax({
                 type: "GET",
                 url: "/close-position",
-                data: {"tid":id},
+                data: {"tid": id},
+                success: function (result) {
+                    // alert(result);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("error!");
+                }
+            });
+        }
+
+        function display_one(code){
+            console.log("display_one");
+
+            $.ajax({
+                type: "GET",
+                url: "/real-position-single",
+                data: {"code": code},
                 success: function (result) {
                     // alert(result);
                 },
@@ -142,10 +78,10 @@
 
 
 <div>
-    <input type="button" id="wsopen" value="wsopen" onclick="wsconnect()"/>
+    <input type="button" id="wsopen" value="wsopen" onclick="reconnect()"/>
     <input type="button" id="refresh-price" value="刷新行情" onclick="refresh()"/>
 
-<!--    todo 开仓功能-->
+    <!--    todo 开仓功能-->
     <input type="button" id="open-positon" value="开仓">
 
 </div>
@@ -153,34 +89,57 @@
 
 <div th:fragment="t1" id="t1">
 
-    持仓总成本
-    <span th:text="${totalPositionCost}"></span>
+    <div style="display:flex">
+        <div style="float:left">
+            <div>
+                持仓总成本
+                <span th:text="${totalPositionCost}"></span>
+            </div>
+            <div>持仓盈亏比
 
-    <div>持仓盈亏比
-
-        <span th:if="${totalProfitLosseRate} gt 0">
+                <span th:if="${totalProfitLosseRate} gt 0">
                 <span th:text="${totalProfitLosseRate}" style="color:red;"></span>
             </span>
-        <span th:if="${totalProfitLosseRate} lt 0">
+                <span th:if="${totalProfitLosseRate} lt 0">
                 <span th:text="${totalProfitLosseRate}" style="color:green;"></span>
             </span>
-        <span th:if="${totalProfitLosseRate} eq 0">
+                <span th:if="${totalProfitLosseRate} eq 0">
                 <span th:text="${totalProfitLosseRate}"></span>
             </span>
-    </div>
-    <div>持仓盈亏
+            </div>
+            <div>持仓盈亏
 
-        <span th:if="${sumProfitLosses} gt 0">
+                <span th:if="${sumProfitLosses} gt 0">
                 <span th:text="${sumProfitLosses}" style="color:red;"></span>
             </span>
-        <span th:if="${sumProfitLosses} lt 0">
+                <span th:if="${sumProfitLosses} lt 0">
                 <span th:text="${sumProfitLosses}" style="color:green;"></span>
             </span>
-        <span th:if="${sumProfitLosses} eq 0">
+                <span th:if="${sumProfitLosses} eq 0">
                 <span th:text="${sumProfitLosses}"></span>
             </span>
 
+            </div>
+        </div>
+        <div style="float:left">
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+        <div style="float:left">
+            <div>
+<!--                <input type="button" id="display-all" value="ALL">-->
+<!--                <input type="button" id="sh601919" value="中远海控" onclick="display_one('sh601919')">-->
+
+            </div>
+        </div>
+
     </div>
+
 
     <table border="1" cellspacing="0">
         <thead>
@@ -208,10 +167,10 @@
             <td th:text="${item.position.name}"></td>
 
             <!--            盈亏-->
-            <td th:text="${item.profitLoss}"  th:style="${item.positionTablePLStyle}"></td>
+            <td th:text="${item.profitLoss}" th:style="${item.positionTablePLStyle}"></td>
 
             <!--            盈亏比-->
-            <td th:text="${item.profitLossRateShow}"  th:style="${item.positionTablePLStyle}"></td>
+            <td th:text="${item.profitLossRateShow}" th:style="${item.positionTablePLStyle}"></td>
 
             <td th:text="${item.position.number}"></td>
 
@@ -226,11 +185,15 @@
 
             <td>
                 <!--                 平仓功能-->
-                <input type="button" value="平仓" th:data-id="${item.position.id}" onclick="close_position(this.getAttribute('data-id'))">
+                <input type="button" value="平仓" th:data-id="${item.position.id}"
+                       onclick="close_position(this.getAttribute('data-id'))"/>
+                <!--          todo       修改持仓数据-->
+                <input type="button" value="修改"/>
             </td>
 
 
-            <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格" onclick="refresh_one(this.getAttribute('data-id'))"></td>
+            <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格"
+                       onclick="refresh_one(this.getAttribute('data-id'))"></td>
         </tr>
         </tbody>
     </table>

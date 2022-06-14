@@ -11,6 +11,8 @@ public interface PositionRepository extends JpaRepository<PositionEntity,Long> {
     @Override
     List<PositionEntity> findAll();
 
+    List<PositionEntity> findAllByCode(String code);
+
     List<PositionEntity> findAllByStatus(PositionStatus status);
 
     PositionEntity findTopById(Long id);

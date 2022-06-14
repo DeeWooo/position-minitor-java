@@ -44,4 +44,9 @@ public class PositionProfitLoss {
      */
     private String positionTablePLStyle;
 
+    /*
+    名称
+     */
+    private String positionName;
+
 }

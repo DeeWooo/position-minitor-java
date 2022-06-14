@@ -48,9 +48,10 @@ public class MyWebSocket {
                 public void run() {
 
                     synchronized (session) {
-
-                        broadcast("t1-load",session.getId());
                         System.out.println("10s查询");
+                        System.out.println("t1-load===="+session.getId());
+                        broadcast("t1-load",session.getId());
+
                     }
                 }
 
@@ -122,6 +123,8 @@ public class MyWebSocket {
         //这里可以设定只推送给这个appointId的
         for (Map.Entry<String, MyWebSocket> item : webSocketSet.entrySet()) {
 
+            System.out.println(message);
+            System.out.println(appointId);
             item.getValue().session.getAsyncRemote().sendText(message);//异步发送消息.
         }
 

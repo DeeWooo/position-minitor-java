@@ -34,6 +34,16 @@ public class PositionService {
                 .collect(Collectors.toList());
     }
 
+    public List<PositionProfitLoss> showOne(String code){
+
+        List<PositionEntity> positionEntities = positionRepository.findAllByCode(code);
+
+
+        return positionEntities.stream().filter(entity -> PositionStatus.CLOSE != entity.getStatus())
+                .map(item-> convertEntity2ProfitLoss(item) )
+                .collect(Collectors.toList());
+    }
+
     /**
      * 获取去重后所有持仓中的代码
      * @return
@@ -85,7 +95,9 @@ public class PositionService {
 
         positionProfitLoss.setPositionCost(entity.getBuyInPrice().multiply(BigDecimal.valueOf(entity.getNumber())));
 
+        positionProfitLoss.setPositionName(entity.getName());
 
+        //前端样式控制
         styleProcess(positionProfitLoss);
 
 
