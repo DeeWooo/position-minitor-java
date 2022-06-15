@@ -154,6 +154,7 @@
 
             <th>买入日期</th>
 
+            <th>投资组合</th>
 
             <th></th>
             <th></th>
@@ -182,6 +183,8 @@
             <td th:text="${item.position.buyInPrice}"></td>
             <!--买入日期-->
             <td th:text="${item.buyInDateShow}"></td>
+            <!--            投资组合-->
+            <td th:text="${item.portfolioShow}"></td>
 
             <td>
                 <!--                 平仓功能-->
@@ -194,6 +197,8 @@
 
             <td><input type="button" th:data-id="${item.position.code}" value="更新本行最新价格"
                        onclick="refresh_one(this.getAttribute('data-id'))"></td>
+
+
         </tr>
         </tbody>
     </table>

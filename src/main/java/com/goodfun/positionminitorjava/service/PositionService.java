@@ -97,6 +97,12 @@ public class PositionService {
 
         positionProfitLoss.setPositionName(entity.getName());
 
+
+//        投资组合
+        positionProfitLoss.setPortfolioShow(entity.getPortfolio().getInfo());
+
+
+
         //前端样式控制
         styleProcess(positionProfitLoss);
 
