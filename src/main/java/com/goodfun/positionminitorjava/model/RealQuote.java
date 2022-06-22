@@ -9,6 +9,8 @@ public class RealQuote {
 
     private String code;
 
+    private String name;
+
     private BigDecimal realPrice;
 
 }

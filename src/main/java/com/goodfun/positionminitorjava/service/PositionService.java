@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,12 +54,15 @@ public class PositionService {
                 .distinct().collect(Collectors.toList());
 
     }
+
+
+
     /**
      * 拼组实时盈亏
      * @param entity
      * @return
      */
-    private PositionProfitLoss convertEntity2ProfitLoss(PositionEntity entity){
+    public PositionProfitLoss convertEntity2ProfitLoss(PositionEntity entity){
 
         PositionProfitLoss positionProfitLoss = new PositionProfitLoss();
         positionProfitLoss.setPosition(entity);

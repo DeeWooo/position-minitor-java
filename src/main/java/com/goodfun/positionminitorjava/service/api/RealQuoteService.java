@@ -18,16 +18,16 @@ import java.util.regex.Pattern;
 /**
  * todo 1 访问一次接口，解析多条数据
  * todo 4 优化访问api，现在的不优雅
- * todo 5 设计不同投资组合展示页面
  */
 @Service
 public class RealQuoteService {
+
+    private String stockUrl = "http://qt.gtimg.cn/q={code}";
 
     @Autowired
     RestTemplate restTemplate;
 
     public float getStockRealPrice(String code){
-        String url = "http://qt.gtimg.cn/q={code}";
 //        list=sh601006
         Map<String,String> map =new HashMap<>();
 //        map.put("code","sh601006");
@@ -41,7 +41,7 @@ public class RealQuoteService {
 
         HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        String result = restTemplate.getForObject(url, String.class, map);
+        String result = restTemplate.getForObject(stockUrl, String.class, map);
 //        String result = restTemplate.getForObject(url, String.class);
 //        ResponseEntity<String> exchage = restTemplate.exchange(url, HttpMethod.GET,entity,String.class);
 
@@ -64,18 +64,62 @@ public class RealQuoteService {
      * @return
      */
     public void buildRealQuoteMap(String code){
-        // 1. 访问接口得到实时数据
-        BigDecimal realPrice = new BigDecimal(getStockRealPrice(code));
-        // 2. 组装RealQuote
-        RealQuote realQuote = new RealQuote();
-        realQuote.setCode(code);
-        realQuote.setRealPrice(realPrice.setScale(4,BigDecimal.ROUND_HALF_UP));
-        // 3. 放入map
-        Quote.realQuoteMap.put(code,realQuote);
+
+        //放入map
+        Quote.realQuoteMap.put(code,getRealQuote(code));
     }
 
 
+    private RealQuote getRealQuote(String code){
 
+        //访问api
+        String result = getOneStockRealQuoteFromAPI(code);
+
+        //解析结果
+        Pattern p1=Pattern.compile("\"(.*?)\"");
+        Matcher m = p1.matcher(result);
+
+        String values = "";
+        while (m.find()) {
+
+            values = m.group().toString().replace("\"","");
+        }
+
+        String[] list =  values.split("~");
+
+        //组装结构
+        //实时价格
+        BigDecimal realPrice = new BigDecimal(Float.valueOf(list[3]));
+        String name = list[1];
+
+        // 组装RealQuote
+        RealQuote realQuote = new RealQuote();
+        realQuote.setCode(code);
+        realQuote.setName(name);
+        realQuote.setRealPrice(realPrice.setScale(4,BigDecimal.ROUND_HALF_UP));
+
+
+        return realQuote;
+
+
+
+    }
+
+    private String  getOneStockRealQuoteFromAPI(String code){
+        Map<String,String> map =new HashMap<>();
+//        map.put("code","sh601006");
+        map.put("code",code.trim());
+
+        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Referer","https://finance.sina.com.cn/");
+
+//        List<Charset> acceptCharset = Collections.singletonList(StandardCharsets.UTF_8);
+//        headers.setAcceptCharset(acceptCharset);
+
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+        return restTemplate.getForObject(stockUrl, String.class, map);
+    }
 
 
     public static void main(String[] args) {

@@ -23,6 +23,10 @@ function wsconnect() {
             if (received_msg == "t1-load") {
                 $('#t1').load('real-position-refresh');
             }
+            // todo fix 投资组合页面websocket有问题
+            if(received_msg == "t2-load"){
+                $('#t2').load('portfolio-refresh');
+            }
 
 
         };

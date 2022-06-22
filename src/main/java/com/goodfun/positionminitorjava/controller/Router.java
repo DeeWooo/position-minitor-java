@@ -1,7 +1,11 @@
 package com.goodfun.positionminitorjava.controller;
 
 import com.goodfun.positionminitorjava.dao.entity.Demo;
+import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
+import com.goodfun.positionminitorjava.global.Portfolio;
+import com.goodfun.positionminitorjava.model.PortfolioProfitLoss;
 import com.goodfun.positionminitorjava.model.PositionProfitLoss;
+import com.goodfun.positionminitorjava.service.PortfolioService;
 import com.goodfun.positionminitorjava.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +26,34 @@ public class Router {
     @Autowired
     private PositionService positionService;
 
+    @Autowired
+    private PortfolioService portfolioService;
+
     @GetMapping("/index")
     public String index() {
         return "index";
+
+    }
+
+    @GetMapping("/portfolio")
+    public String portfolio(Model model){
+
+        List<PortfolioProfitLoss> portfolioProfitLosses = portfolioService.show();
+
+        portfolioShow(model, portfolioProfitLosses);
+
+        return "portfolio";
+
+    }
+
+    @GetMapping("/portfolio-refresh")
+    public String portfolioRefresh(Model model){
+
+        List<PortfolioProfitLoss> portfolioProfitLosses = portfolioService.show();
+
+        portfolioShow(model, portfolioProfitLosses);
+
+        return "portfolio::t2";
 
     }
 
@@ -83,12 +112,6 @@ public class Router {
 
         model.addAttribute("positons", positionProfitLosses);
 
-
-
-
-
-
-
         BigDecimal sumProfitLosses = positionProfitLosses.stream()
                 .map(PositionProfitLoss::getProfitLoss)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -110,5 +133,26 @@ public class Router {
 
     }
 
+    private void portfolioShow(Model model, List<PortfolioProfitLoss> positionProfitLosses){
+        model.addAttribute("positons", positionProfitLosses);
+
+    }
+
+    private List<PortfolioProfitLoss> convertPositionProfitLoss2PortfolioProfitLossList(List<PositionProfitLoss> positionProfitLosses ) {
+        List<Portfolio> portfolios = positionProfitLosses.stream()
+                .map(PositionProfitLoss::getPosition)
+                .map(PositionEntity::getPortfolio)
+                .distinct().sorted()
+                .collect(Collectors.toList());
+
+        List<PortfolioProfitLoss> portfolioProfitLosses = portfolios.stream()
+                .map(item->{
+                    PortfolioProfitLoss portfolioProfitLoss = new PortfolioProfitLoss();
+                    portfolioProfitLoss.setPortfolio(item);
+
+                    return portfolioProfitLoss;
+                }).collect(Collectors.toList());
+        return portfolioProfitLosses;
+    }
 
 }

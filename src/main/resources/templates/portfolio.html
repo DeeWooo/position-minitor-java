@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>投资组合持仓</title>
+
+
+    <script src='https://libs.jshub.com/jquery/3.6.0/jquery.min.js'
+            integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=='
+            crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css"/>
+    <script src="https://www.layuicdn.com/layui/layui.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <script src="static/ws.js"></script>
+
+
+    <script type="text/javascript">
+        function refreshPage() {
+            $('#t2').load('portfolio-refresh');
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+
+<input type="button" id="wsopen" value="wsopen" onclick="reconnect()"/>
+
+<input type="button" value="刷新数据" onclick="refreshPage()">
+<div th:fragment="t2" id="t2">
+
+
+    <div th:each="item:${positons}">
+        总持仓成本 220251.801 满仓金额
+        总盈亏 -9635.401 总盈亏比
+        <div th:text="'投资组合：'+${item.portfolio.info}"></div>
+
+        <div th:each="targetitem:${item.targetProfitLossList}">
+            <div class="layui-row">
+
+                <div class="layui-col-xs2">
+                    <div th:text="${targetitem.code}"></div>
+                    <div th:text="${targetitem.name}"></div>
+                    <div>当前价格</div>
+                    <div th:text="${targetitem.realPrice}"></div>
+                </div>
+                <div class="layui-col-xs2">
+                    <div>
+                        当前仓位 0.58035
+
+                    </div>
+                    <div>
+                        成本仓位 0.57817
+
+                    </div>
+                    <div>
+                        盈亏比 0.003770517322
+
+                    </div>
+                    <div>
+                        盈亏 109
+
+                    </div>
+
+                </div>
+                <div class="layui-col-xs8">
+                    <table class="reversal">
+                        <tr>
+                            <th>买入日期</th>
+                            <th>买入价格</th>
+                            <th>数量</th>
+                            <th>盈亏</th>
+                            <th>盈亏比</th>
+
+                        </tr>
+
+                        <tr th:each="entityItem:${targetitem.positionProfitLosses}">
+                            <td th:text="${entityItem.buyInDateShow}"></td>
+                            <td th:text="${entityItem.position.buyInPrice}"></td>
+                            <td th:text="${entityItem.position.number}"></td>
+                            <td th:text="${entityItem.profitLoss}" th:style="${entityItem.positionTablePLStyle}"></td>
+                            <td th:text="${entityItem.profitLossRateShow}" th:style="${entityItem.positionTablePLStyle}"></td>
+
+                        </tr>
+
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

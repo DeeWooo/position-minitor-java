@@ -1,0 +1,14 @@
+
+
+table.reversal{
+    text-align: center;
+}
+
+table.reversal tr{
+    display: inline-block;
+}
+
+table.reversal th,td{
+    display: block;
+    border: 1px solid;
+}

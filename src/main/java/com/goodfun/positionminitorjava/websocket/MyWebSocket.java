@@ -51,6 +51,7 @@ public class MyWebSocket {
                         System.out.println("10s查询");
                         System.out.println("t1-load===="+session.getId());
                         broadcast("t1-load",session.getId());
+                        broadcast("t2-load",session.getId());
 
                     }
                 }
