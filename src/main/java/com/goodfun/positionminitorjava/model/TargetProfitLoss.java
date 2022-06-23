@@ -47,5 +47,14 @@ public class TargetProfitLoss {
      */
     private BigDecimal targetProfitLossRate;
 
+    /*
+    建议买入点
+     */
+    private BigDecimal recommendedBuyInPoint;
+    /*
+    建议卖出点
+     */
+    private BigDecimal recommendedSaleOutPoint;
+
 
 }

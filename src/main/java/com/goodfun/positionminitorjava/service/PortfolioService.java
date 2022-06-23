@@ -12,6 +12,7 @@ import com.goodfun.positionminitorjava.model.TargetProfitLoss;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -55,12 +56,10 @@ public class PortfolioService {
                             Set<String> codeKeySet = codeMap.keySet();
                             List<TargetProfitLoss> targetProfitLossList = codeKeySet.stream()
                                     .map(codeItem ->{
-//                                        if(codeItem.equals("sh600585")){
-//                                            System.out.println(codeItem);
-//                                        }
                                         TargetProfitLoss targetProfitLoss = new TargetProfitLoss();
                                         targetProfitLoss.setCode(codeItem);
 
+                                        //todo 处理realQuoteMap初始化还没有数据的时间间隔
                                         RealQuote realQuote = Quote.realQuoteMap.get(codeItem);
                                         targetProfitLoss.setName(realQuote.getName());
                                         targetProfitLoss.setRealPrice(realQuote.getRealPrice());
@@ -75,6 +74,18 @@ public class PortfolioService {
                                                         .collect(Collectors.toList());
 
                                         targetProfitLoss.setPositionProfitLosses(positionProfitLosses);
+
+                                        Double costPosition = positionEntityList.stream().reduce(0.0,(x,y)-> x+(y.getBuyInPrice().doubleValue() * y.getNumber()),Double::sum);
+
+                                        targetProfitLoss.setCostPositionRate(new BigDecimal(costPosition).divide(Quote.FULL_POSITION));
+
+                                        Integer currentNumber = positionEntityList.stream().mapToInt(PositionEntity::getNumber).sum();
+
+                                        BigDecimal currentPosition = realQuote.getRealPrice().multiply(new BigDecimal(currentNumber));
+                                        targetProfitLoss.setCurrentPositionRate(currentPosition.divide(Quote.FULL_POSITION));
+
+                                        //todo targetProfitLoss对象的盈亏、盈亏比统计
+                                        //todo targetProfitLoss对象增加建议买入点、建议卖出点属性
 
                                         return targetProfitLoss;
                                     })

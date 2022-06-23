@@ -35,28 +35,25 @@
 
 
     <div th:each="item:${positons}">
-        总持仓成本 220251.801 满仓金额
-        总盈亏 -9635.401 总盈亏比
+        <hr />
         <div th:text="'投资组合：'+${item.portfolio.info}"></div>
+
+        总持仓成本 220251.801 满仓金额 50000
+        总盈亏 -9635.401 总盈亏比
 
         <div th:each="targetitem:${item.targetProfitLossList}">
             <div class="layui-row">
 
-                <div class="layui-col-xs2">
+                <div class="layui-col-xs1">
                     <div th:text="${targetitem.code}"></div>
                     <div th:text="${targetitem.name}"></div>
                     <div>当前价格</div>
                     <div th:text="${targetitem.realPrice}"></div>
                 </div>
                 <div class="layui-col-xs2">
-                    <div>
-                        当前仓位 0.58035
+                    <div th:text="'当前仓位: '+${targetitem.currentPositionRate}"></div>
+                    <div th:text="'成本仓位: ' + ${targetitem.costPositionRate}"></div>
 
-                    </div>
-                    <div>
-                        成本仓位 0.57817
-
-                    </div>
                     <div>
                         盈亏比 0.003770517322
 
@@ -67,7 +64,7 @@
                     </div>
 
                 </div>
-                <div class="layui-col-xs8">
+                <div class="layui-col-xs9">
                     <table class="reversal">
                         <tr>
                             <th>买入日期</th>
