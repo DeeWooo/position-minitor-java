@@ -42,18 +42,20 @@
         总盈亏 -9635.401 总盈亏比
 
         <div th:each="targetitem:${item.targetProfitLossList}">
+            <HR style="border:1 dashed #987cb9" width="80%" color=#987cb9 SIZE=1>
             <div class="layui-row">
 
                 <div class="layui-col-xs1">
                     <div th:text="${targetitem.code}"></div>
                     <div th:text="${targetitem.name}"></div>
+                    <HR align=center color=#987cb9 SIZE=1>
                     <div>当前价格</div>
                     <div th:text="${targetitem.realPrice}"></div>
                 </div>
                 <div class="layui-col-xs2">
                     <div th:text="'当前仓位: '+${targetitem.currentPositionRate}"></div>
                     <div th:text="'成本仓位: ' + ${targetitem.costPositionRate}"></div>
-
+                    <HR align=center color=#987cb9 SIZE=1>
                     <div>
                         盈亏比 0.003770517322
 
