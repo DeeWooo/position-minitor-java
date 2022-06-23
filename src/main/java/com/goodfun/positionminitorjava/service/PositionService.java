@@ -6,6 +6,7 @@ import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
 import com.goodfun.positionminitorjava.global.PositionStatus;
 import com.goodfun.positionminitorjava.global.Quote;
 import com.goodfun.positionminitorjava.model.PositionProfitLoss;
+import com.goodfun.positionminitorjava.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -123,29 +124,7 @@ public class PositionService {
     private PositionProfitLoss styleProcess(PositionProfitLoss positionProfitLoss){
 
 
-//        字体控制
-        String colorStyle = "color:";
-        String fontWeightStyle = "font-weight:bold;";
-
-        String pLStyle = "";
-
-        //颜色
-        int compareColor = positionProfitLoss.getProfitLoss().compareTo(BigDecimal.ZERO);
-
-        if(compareColor > 0 ){
-            pLStyle = colorStyle + "red;";
-        }
-        else if(compareColor < 0 ){
-            pLStyle = colorStyle + "green;";
-        }
-
-        //粗体
-        int compareBold = positionProfitLoss.getProfitLossRate().multiply(new BigDecimal(100)).abs().compareTo(BigDecimal.TEN);
-        if(compareBold > 0){
-            pLStyle += fontWeightStyle;
-        }
-
-        positionProfitLoss.setPositionTablePLStyle(pLStyle);
+        positionProfitLoss.setPositionTablePLStyle(CommonUtils.styleProcess(positionProfitLoss.getProfitLoss(), positionProfitLoss.getProfitLossRate()));
 
         return positionProfitLoss;
     }
