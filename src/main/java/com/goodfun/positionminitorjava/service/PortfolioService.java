@@ -9,6 +9,7 @@ import com.goodfun.positionminitorjava.model.PortfolioProfitLoss;
 import com.goodfun.positionminitorjava.model.PositionProfitLoss;
 import com.goodfun.positionminitorjava.model.RealQuote;
 import com.goodfun.positionminitorjava.model.TargetProfitLoss;
+import com.goodfun.positionminitorjava.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,16 +76,33 @@ public class PortfolioService {
 
                                         targetProfitLoss.setPositionProfitLosses(positionProfitLosses);
 
+                                        //计算成本仓位
                                         Double costPosition = positionEntityList.stream().reduce(0.0,(x,y)-> x+(y.getBuyInPrice().doubleValue() * y.getNumber()),Double::sum);
 
-                                        targetProfitLoss.setCostPositionRate(new BigDecimal(costPosition).divide(Quote.FULL_POSITION));
+                                        targetProfitLoss.setCostPositionRate(new BigDecimal(costPosition).divide(Quote.FULL_POSITION,6, BigDecimal.ROUND_HALF_UP));
 
+                                        //计算当前仓位
                                         Integer currentNumber = positionEntityList.stream().mapToInt(PositionEntity::getNumber).sum();
 
                                         BigDecimal currentPosition = realQuote.getRealPrice().multiply(new BigDecimal(currentNumber));
-                                        targetProfitLoss.setCurrentPositionRate(currentPosition.divide(Quote.FULL_POSITION));
+                                        targetProfitLoss.setCurrentPositionRate(currentPosition.divide(Quote.FULL_POSITION,6,
+                                                BigDecimal.ROUND_HALF_UP));
 
-                                        //todo targetProfitLoss对象的盈亏、盈亏比统计
+                                        //计算盈亏
+                                        BigDecimal profitLoss = positionProfitLosses.stream()
+                                                .map(PositionProfitLoss::getProfitLoss)
+                                                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                                        targetProfitLoss.setTargetProfitLoss(profitLoss);
+
+//                                        System.out.println(codeItem+"-"+realQuote.getName()+"-"+costPosition);
+                                        //计算盈亏比
+                                        BigDecimal profitLossRate = (costPosition.equals(0.0)
+                                        ?BigDecimal.ZERO:profitLoss.divide(new BigDecimal(costPosition),6, BigDecimal.ROUND_HALF_UP));
+                                        targetProfitLoss.setTargetProfitLossRate(profitLossRate);
+
+                                        targetProfitLoss.setPLStyle(CommonUtils.styleProcess(profitLoss, profitLossRate));
+
                                         //todo targetProfitLoss对象增加建议买入点、建议卖出点属性
 
                                         return targetProfitLoss;

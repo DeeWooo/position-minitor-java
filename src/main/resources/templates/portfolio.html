@@ -56,14 +56,10 @@
                     <div th:text="'当前仓位: '+${targetitem.currentPositionRate}"></div>
                     <div th:text="'成本仓位: ' + ${targetitem.costPositionRate}"></div>
                     <HR align=center color=#987cb9 SIZE=1>
-                    <div>
-                        盈亏比 0.003770517322
-
-                    </div>
-                    <div>
-                        盈亏 109
-
-                    </div>
+                    <div th:text="'盈亏比： '+${targetitem.targetProfitLossRate}"
+                         th:style="${targetitem.pLStyle}"></div>
+                    <div th:text="'盈亏: '+ ${targetitem.targetProfitLoss}"
+                         th:style="${targetitem.pLStyle}"></div>
 
                 </div>
                 <div class="layui-col-xs9">

@@ -48,6 +48,11 @@ public class TargetProfitLoss {
     private BigDecimal targetProfitLossRate;
 
     /*
+        盈亏字体样式
+    */
+    private String pLStyle;
+
+    /*
     建议买入点
      */
     private BigDecimal recommendedBuyInPoint;
