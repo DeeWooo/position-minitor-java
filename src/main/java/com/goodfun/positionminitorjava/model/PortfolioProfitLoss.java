@@ -34,5 +34,15 @@ public class PortfolioProfitLoss {
      */
     private BigDecimal sumProfitLossesRate;
 
+    /*
+    满仓金额
+     */
+    private BigDecimal fullPosition;
+
+    /*
+        盈亏字体样式
+    */
+    private String pLStyle;
+
 
 }

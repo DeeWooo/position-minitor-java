@@ -48,6 +48,7 @@ public class PortfolioService {
                         .map(item ->{
                             PortfolioProfitLoss portfolioProfitLoss = new PortfolioProfitLoss();
                             portfolioProfitLoss.setPortfolio(item);
+                            portfolioProfitLoss.setFullPosition(Quote.FULL_POSITION);
 
                             List<PositionEntity> entities = portfolioMap.get(item);
 
@@ -110,6 +111,29 @@ public class PortfolioService {
                                     .collect(Collectors.toList());
 
                             portfolioProfitLoss.setTargetProfitLossList(targetProfitLossList);
+
+                            //计算盈亏
+                            BigDecimal sumProfitLosses = targetProfitLossList.stream()
+                                    .map(TargetProfitLoss::getTargetProfitLoss)
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                            portfolioProfitLoss.setSumProfitLosses(sumProfitLosses);
+
+                            //总持仓成本
+                            BigDecimal sumCostPositionRate = targetProfitLossList.stream()
+                                    .map(TargetProfitLoss::getCostPositionRate)
+                                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                            portfolioProfitLoss.setSumPositionCost(sumCostPositionRate.multiply( portfolioProfitLoss.getFullPosition()));
+
+                            //总盈亏比
+                            BigDecimal sumProfitLossesRate = sumProfitLosses.divide(sumCostPositionRate.multiply(portfolioProfitLoss.getFullPosition()),6,BigDecimal.ROUND_HALF_UP);
+                            portfolioProfitLoss.setSumProfitLossesRate(sumProfitLossesRate);
+
+
+                            //盈亏字体样式
+                            String pLStyle = CommonUtils.styleProcess(sumProfitLosses,sumProfitLossesRate);
+                            portfolioProfitLoss.setPLStyle(pLStyle);
 
                             return  portfolioProfitLoss;
                         })
