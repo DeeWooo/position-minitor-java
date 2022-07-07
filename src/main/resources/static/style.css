@@ -31,3 +31,15 @@ table.reversal th,td{
     width: 100%;
     /*background:paleturquoise;*/
 }
+
+
+.float-button {
+    position: fixed; //关键
+height: 90px;
+    width: 40px;
+    bottom: 90px;
+    right: 50px;
+    background: #d5d3d3;
+}
+.float-button:hover{ background-color: #798383 !important;}
+.float-button:active{ background-color:#fff;}
