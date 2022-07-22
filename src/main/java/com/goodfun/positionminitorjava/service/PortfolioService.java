@@ -105,6 +105,8 @@ public class PortfolioService {
                                         targetProfitLoss.setPLStyle(CommonUtils.styleProcess(profitLoss, profitLossRate));
 
                                         //todo targetProfitLoss对象增加建议买入点、建议卖出点属性
+                                        //todo targetProfitLoss对象增加 距离最高点下跌幅度
+                                        //todo targetProfitLoss对象增加 静态PE值
 
                                         return targetProfitLoss;
                                     })

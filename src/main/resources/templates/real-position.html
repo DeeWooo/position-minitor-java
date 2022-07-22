@@ -151,7 +151,8 @@
             <th>数量</th>
             <th>当前价格</th>
             <th>买入价格</th>
-
+            <th>盈10%</th>
+            <th>盈20%</th>
             <th>买入日期</th>
 
             <th>投资组合</th>
@@ -180,6 +181,13 @@
 
             <!--买入价格-->
             <td th:text="${item.position.buyInPrice}"></td>
+
+            <!--涨10%买入价-->
+            <td th:text="${item.position.buyInPrice}*1.1"></td>
+
+            <!--            涨10%买入价-->
+            <td th:text="${item.position.buyInPrice}*1.2"></td>
+
             <!--买入日期-->
             <td th:text="${item.buyInDateShow}"></td>
             <!--            投资组合-->

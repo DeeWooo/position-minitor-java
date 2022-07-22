@@ -54,9 +54,9 @@
                 <HR style="border:1 dashed #987cb9" width="80%" color=#987cb9 SIZE=1>
                 <div class="layui-row">
 
-                    <div class="layui-col-xs1">
+                    <div class="layui-col-xs2">
                         <div th:text="${targetitem.code}"></div>
-                        <div th:text="${targetitem.name}"></div>
+                        <div th:text="${targetitem.name}+'('+${#strings.substring(targetitem.code,2,8)}+')'"></div>
                         <HR align=center color=#987cb9 SIZE=1>
                         <div>当前价格</div>
                         <div th:text="${targetitem.realPrice}" style="font-size:20px"></div>
@@ -72,11 +72,12 @@
                              th:style="${targetitem.pLStyle}"></div>
 
                         <HR align=center color=#987cb9 SIZE=1>
-                        <div>建议买入点</div>
-                        <div>建议卖出点</div>
+                        <div th:text="'建议买入区间(-10%)<'+ ${targetitem.positionProfitLosses[0].position.buyInPrice}*0.9"></div>
+                        <div th:text="'建议卖出区间(10%)>'+ ${targetitem.positionProfitLosses[0].position.buyInPrice}*1.1"></div>
+
 
                     </div>
-                    <div class="layui-col-xs9">
+                    <div >
                         <table class="reversal">
                             <tr>
                                 <th>买入日期</th>
