@@ -62,4 +62,9 @@ public class TargetProfitLoss {
     private BigDecimal recommendedSaleOutPoint;
 
 
+    /*
+        交易信号字体
+     */
+    private String tsStyle;
+
 }

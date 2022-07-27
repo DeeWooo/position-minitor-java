@@ -59,7 +59,7 @@
                         <div th:text="${targetitem.name}+'('+${#strings.substring(targetitem.code,2,8)}+')'"></div>
                         <HR align=center color=#987cb9 SIZE=1>
                         <div>当前价格</div>
-                        <div th:text="${targetitem.realPrice}" style="font-size:20px"></div>
+                        <div th:text="${targetitem.realPrice}" th:style="${targetitem.tsStyle} + 'font-size:20px'"></div>
                     </div>
                     <div class="layui-col-xs2">
                         <div th:text="'当前仓位: '+${targetitem.currentPositionRate}"></div>
@@ -72,8 +72,8 @@
                              th:style="${targetitem.pLStyle}"></div>
 
                         <HR align=center color=#987cb9 SIZE=1>
-                        <div th:text="'建议买入区间(-10%)<'+ ${targetitem.positionProfitLosses[0].position.buyInPrice}*0.9"></div>
-                        <div th:text="'建议卖出区间(10%)>'+ ${targetitem.positionProfitLosses[0].position.buyInPrice}*1.1"></div>
+                        <div th:text="'建议买入区间(-10%)<'+ ${targetitem.recommendedBuyInPoint}"></div>
+                        <div th:text="'建议卖出区间(10%)>'+ ${targetitem.recommendedSaleOutPoint}"></div>
 
 
                     </div>

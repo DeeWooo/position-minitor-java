@@ -33,4 +33,25 @@ public class CommonUtils {
 
         return pLStyle;
     }
+
+    public static String styleTradingSignal(BigDecimal price,BigDecimal buyIn, BigDecimal saleOut){
+
+//        字体控制
+        String colorStyle = "color:";
+//        String fontWeightStyle = "font-weight:bold;";
+
+        String tsStyle = "";
+
+        //卖出区间
+        int compareUp = price.compareTo(saleOut);
+        //买入区间
+        int compareDown = price.compareTo(buyIn);
+
+        if(compareUp >= 0 || compareDown <= 0){
+            tsStyle = colorStyle + "orange;";
+        }
+
+        return tsStyle;
+    }
+
 }

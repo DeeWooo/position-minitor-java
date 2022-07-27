@@ -104,7 +104,29 @@ public class PortfolioService {
 
                                         targetProfitLoss.setPLStyle(CommonUtils.styleProcess(profitLoss, profitLossRate));
 
-                                        //todo targetProfitLoss对象增加建议买入点、建议卖出点属性
+
+                                        //最后一笔买入
+                                        BigDecimal lastBuyIn = BigDecimal.ZERO;
+                                                //positionProfitLosses.get(0).getPosition().getBuyInPrice();
+
+                                        for (PositionProfitLoss i :positionProfitLosses) {
+                                            if(i.getPosition().getBuyInPrice().compareTo(BigDecimal.ZERO) > 0){
+                                                lastBuyIn = i.getPosition().getBuyInPrice();
+                                                break;
+                                            }
+                                        }
+
+                                        BigDecimal buyIn = lastBuyIn.multiply(new BigDecimal(0.9).setScale(1, BigDecimal.ROUND_HALF_UP));
+                                        BigDecimal saleOut = lastBuyIn.multiply(new BigDecimal(1.1).setScale(1, BigDecimal.ROUND_HALF_UP));
+                                        //建议买入点
+                                        targetProfitLoss.setRecommendedBuyInPoint(buyIn);
+                                        //建议卖出点
+                                        targetProfitLoss.setRecommendedSaleOutPoint(saleOut);
+
+                                        //当前价格样式（买入卖出信号）
+                                        String tsStyle = CommonUtils.styleTradingSignal(targetProfitLoss.getRealPrice(), buyIn, saleOut);
+                                        targetProfitLoss.setTsStyle(tsStyle);
+
                                         //todo targetProfitLoss对象增加 距离最高点下跌幅度
                                         //todo targetProfitLoss对象增加 静态PE值
 
@@ -136,6 +158,8 @@ public class PortfolioService {
                             //盈亏字体样式
                             String pLStyle = CommonUtils.styleProcess(sumProfitLosses,sumProfitLossesRate);
                             portfolioProfitLoss.setPLStyle(pLStyle);
+
+
 
                             return  portfolioProfitLoss;
                         })
