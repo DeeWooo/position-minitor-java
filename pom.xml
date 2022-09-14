@@ -64,12 +64,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.xiandan</groupId>
-            <artifactId>gson-ktx</artifactId>
-            <version>1.0.2</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.xiandan</groupId>-->
+<!--            <artifactId>gson-ktx</artifactId>-->
+<!--            <version>1.0.2</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 
 <!--        hutool工具包-->
         <dependency>

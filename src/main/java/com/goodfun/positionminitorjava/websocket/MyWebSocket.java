@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,8 +51,13 @@ public class MyWebSocket {
                     synchronized (session) {
                         System.out.println("10s查询");
                         System.out.println("t1-load===="+session.getId());
-                        broadcast("t1-load",session.getId());
-                        broadcast("t2-load",session.getId());
+                        try {
+                            broadcast("t1-load",session.getId());
+                            broadcast("t2-load",session.getId());
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }
@@ -87,7 +93,7 @@ public class MyWebSocket {
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message, Session session) throws IOException {
         System.out.println("get client msg. ID:" + session.getId() + ". msg:" + message);
 
         System.out.println("来自客户端的消息:" + message);
@@ -119,14 +125,16 @@ public class MyWebSocket {
     /**
      * 群发自定义消息
      */
-    public void broadcast(String message, String appointId) {
+    public void broadcast(String message, String appointId) throws IOException {
 
         //这里可以设定只推送给这个appointId的
         for (Map.Entry<String, MyWebSocket> item : webSocketSet.entrySet()) {
 
-            System.out.println(message);
+            System.out.println("message:"+message);
             System.out.println(appointId);
-            item.getValue().session.getAsyncRemote().sendText(message);//异步发送消息.
+            synchronized (item.getValue().session){
+                item.getValue().session.getBasicRemote().sendText(message);//异步发送消息.
+            }
         }
 
     }
