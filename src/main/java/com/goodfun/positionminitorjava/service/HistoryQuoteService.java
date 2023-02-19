@@ -69,6 +69,12 @@ public class HistoryQuoteService {
     }
 
 
+//    public void get
+
+    public void getAndSaveAllStockDailyData(){
+
+    }
+
     private StockDailyDataEntity convertModel2Entity(StockDailyData model){
         StockDailyDataEntity entity = new StockDailyDataEntity();
         StockDailyDataId stockDailyDataId = new StockDailyDataId();

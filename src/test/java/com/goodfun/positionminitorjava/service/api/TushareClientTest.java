@@ -25,4 +25,12 @@ class TushareClientTest extends PositionMinitorJavaApplicationTests {
 
 
     }
+
+    @Test
+    void getStockBasics() {
+
+        TushareResponse response = client.getStockBasics();
+
+        response.getData().getItems();
+    }
 }

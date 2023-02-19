@@ -14,6 +14,7 @@ import java.util.Map;
 public class TushareClient {
 
     private String tushareToken = "9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f";
+    private String url = "https://api.tushare.pro";
 
 
     private final RestTemplate restTemplate;
@@ -27,7 +28,6 @@ public class TushareClient {
     }
 
     public TushareResponse getStockDailyData(String tsCode, String startDate, String endDate) {
-        String url = "https://api.tushare.pro";
 
         // 构造请求参数
         Map<String, Object> params = new HashMap<>();
@@ -38,7 +38,26 @@ public class TushareClient {
         params.put("end_date", endDate);
         params.put("fields", "ts_code,trade_date,open,high,low,close,vol");
 
+        return  tushareRequest(params);
+    }
 
+    public TushareResponse getStockBasics(){
+        // 构造请求参数
+        Map<String, Object> params = new HashMap<>();
+        params.put("api_name", "stock_basic");
+        params.put("token", tushareToken);
+        params.put("fields", "ts_code,symbol,name,area,industry,list_date");
+
+        Map<String, Object> subparams = new HashMap<>();
+        subparams.put("list_status","L");
+
+        params.put("params", subparams);
+
+
+        return  tushareRequest(params);
+    }
+
+    private TushareResponse tushareRequest(Map<String, Object> params){
         // 定义请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
