@@ -14,12 +14,16 @@ import java.util.Date;
 @Table(name = "stock_daily_data")
 public class StockDailyDataEntity {
 
-    @Id
-    @GeneratedValue
-    private Long stockCode;
+    @EmbeddedId
+    private StockDailyDataId id;
 
-    @Column(name = "trade_date")
-    private Date tradeDate;
+//    @Id
+//    @Column(name = "stock_code")
+//    private String stockCode;
+//
+//    @Id
+//    @Column(name = "trade_date")
+//    private Date tradeDate;
 
     @Column(name = "open_price")
     private BigDecimal openPrice;

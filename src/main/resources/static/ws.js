@@ -4,6 +4,7 @@ function wsconnect() {
     if ("WebSocket" in window) {
 
         // 打开一个 web socket
+        // var ws = new WebSocket("ws://47.92.128.218:1111/websocket");
         var ws = new WebSocket("ws://localhost:1111/websocket");
         var this_self = this;
         ws.onopen = function () {
