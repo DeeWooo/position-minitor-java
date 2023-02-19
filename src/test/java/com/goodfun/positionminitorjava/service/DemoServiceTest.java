@@ -16,7 +16,6 @@ class DemoServiceTest extends PositionMinitorJavaApplicationTests {
 
     @Test
     void show() {
-
         List<Demo> demos = demoService.show();
         System.out.println(demos);
     }
