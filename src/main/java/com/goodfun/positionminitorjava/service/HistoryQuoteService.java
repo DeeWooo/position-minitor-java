@@ -1,4 +1,4 @@
-package com.goodfun.positionminitorjava.service.api;
+package com.goodfun.positionminitorjava.service;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
@@ -6,6 +6,8 @@ import com.goodfun.positionminitorjava.dao.StockDailyDataRepository;
 import com.goodfun.positionminitorjava.dao.entity.StockDailyDataEntity;
 import com.goodfun.positionminitorjava.dao.entity.StockDailyDataId;
 import com.goodfun.positionminitorjava.model.StockDailyData;
+import com.goodfun.positionminitorjava.service.api.TushareClient;
+import com.goodfun.positionminitorjava.service.api.TushareResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -16,43 +18,41 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class HistoryQuoteService {
 
-    private String apiKey = "9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f";
-
-//    // 配置 RestTemplate
-//    @Bean
-//    public RestTemplate restTemplate() {
-//        return new RestTemplate();
-//    }
-
-    // 获取 Tushare API 历史行情数据并保存到 MySQL 数据库
     @Autowired
-    private RestTemplate restTemplate;
+    private TushareClient client;
 
     @Autowired
     private StockDailyDataRepository stockDailyDataRepository;
 
     public void getAndSaveStockDailyData(String stockCode, String startDate, String endDate) {
-        String url = String.format("https://api.tushare.pro/openapi/v1/stock_daily?api_key=%s&ts_code=%s&start_date=%s&end_date=%s",
-                apiKey, stockCode, startDate, endDate);
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
-        JSONObject jsonObject = new JSONObject(response.getBody());
-        JSONArray dataArray = jsonObject.getJSONArray("data");
-        for (int i = 0; i < dataArray.size(); i++) {
-            JSONObject data = dataArray.getJSONObject(i);
-            String tsCode = data.getStr("ts_code");
-            String tradeDateStr = data.getStr("trade_date");
-            BigDecimal openPrice = data.getBigDecimal("open");
-            BigDecimal closePrice = data.getBigDecimal("close");
-            BigDecimal highPrice = data.getBigDecimal("high");
-            BigDecimal lowPrice = data.getBigDecimal("low");
-            BigDecimal volume = data.getBigDecimal("vol");
+        TushareResponse response = client.getStockDailyData(stockCode,startDate,endDate);
 
+        TushareResponse.ResponseDate datas = response.getData();
+//        StockDailyData[] items = datas.getItems();
+
+//        JSONObject jsonObject = new JSONObject(response.getData());
+
+        Object[] items = datas.getItems();
+
+        for (Object item : items) {
+
+            List data = (List) item;
+
+            String tsCode = data.get(0).toString();
+            String tradeDateStr = data.get(1).toString();
+            BigDecimal openPrice = new BigDecimal(data.get(2).toString());
+            BigDecimal closePrice = new BigDecimal(data.get(3).toString());
+            BigDecimal highPrice = new BigDecimal(data.get(4).toString());
+            BigDecimal lowPrice = new BigDecimal(data.get(5).toString());
+            BigDecimal volume = new BigDecimal(data.get(6).toString());
 
 //            处理Tushare返回的日期格式
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -64,6 +64,7 @@ public class HistoryQuoteService {
 
             StockDailyDataEntity entity = convertModel2Entity(stockDailyData);
             stockDailyDataRepository.save(entity);
+
         }
     }
 

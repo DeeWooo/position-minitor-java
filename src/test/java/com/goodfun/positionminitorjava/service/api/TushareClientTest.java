@@ -19,9 +19,9 @@ class TushareClientTest extends PositionMinitorJavaApplicationTests {
         String endDate = "20230219";
 
 
-        TushareResponse<StockDailyData> response = client.getStockDailyData(tsCode,startDate,endDate);
+        TushareResponse response = client.getStockDailyData(tsCode,startDate,endDate);
 
-        response.getData();
+        response.getData().getItems();
 
 
     }

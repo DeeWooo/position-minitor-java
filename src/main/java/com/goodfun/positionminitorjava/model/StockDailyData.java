@@ -1,12 +1,7 @@
 package com.goodfun.positionminitorjava.model;
 
-import com.goodfun.positionminitorjava.dao.entity.StockDailyDataId;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 

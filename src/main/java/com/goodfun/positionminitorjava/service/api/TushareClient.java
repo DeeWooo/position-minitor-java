@@ -26,7 +26,7 @@ public class TushareClient {
         this.retryTemplate = retryTemplate;
     }
 
-    public TushareResponse<StockDailyData> getStockDailyData(String tsCode, String startDate, String endDate) {
+    public TushareResponse getStockDailyData(String tsCode, String startDate, String endDate) {
         String url = "https://api.tushare.pro";
 
         // 构造请求参数

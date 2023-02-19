@@ -3,37 +3,37 @@ package com.goodfun.positionminitorjava.service.api;
 
 import lombok.Data;
 
-public class TushareResponse<T> {
+@Data
+public class TushareResponse {
 
     private String code;
     private String msg;
-    private T data;
+    private ResponseDate data;
 
-    public TushareResponse() {
-    }
 
-    public String getCode() {
-        return code;
-    }
+    public class ResponseDate{
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+        String[] fields;
+        Object items[];
 
-    public String getMsg() {
-        return msg;
-    }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+        public String[] getFields() {
+            return fields;
+        }
 
-    public T getData() {
-        return data;
-    }
+        public void setFields(String[] fields) {
+            this.fields = fields;
+        }
 
-    public void setData(T data) {
-        this.data = data;
+        public Object[] getItems() {
+            return items;
+        }
+
+        public void setItems(Object[] items) {
+            this.items = items;
+        }
+
+
     }
 
 }
