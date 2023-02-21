@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class TushareClient {
 
-    @Value("${tushareToken}")
+    @Value("${pm.param.tushareToken}")
     private String tushareToken;
 //    private String tushareToken = "9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f";
     private String url = "https://api.tushare.pro";

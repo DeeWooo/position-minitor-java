@@ -28,7 +28,7 @@ public class HistoryQuoteService {
     @Autowired
     private TushareClient client;
 
-    @Value("${isDataInitialized}")
+    @Value("${pm.param.isDataInitialized}")
     private boolean isDataInitialized;
 
     @Autowired

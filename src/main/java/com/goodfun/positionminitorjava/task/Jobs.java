@@ -1,4 +1,4 @@
-package com.goodfun.positionminitorjava.config;
+package com.goodfun.positionminitorjava.task;
 
 import com.goodfun.positionminitorjava.controller.RealQuoteController;
 import org.springframework.beans.factory.annotation.Autowired;
