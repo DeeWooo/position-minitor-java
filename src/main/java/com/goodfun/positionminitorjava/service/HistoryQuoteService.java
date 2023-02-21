@@ -1,34 +1,35 @@
 package com.goodfun.positionminitorjava.service;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import com.goodfun.positionminitorjava.dao.StockDailyDataRepository;
 import com.goodfun.positionminitorjava.dao.entity.StockDailyDataEntity;
 import com.goodfun.positionminitorjava.dao.entity.StockDailyDataId;
 import com.goodfun.positionminitorjava.model.StockDailyData;
 import com.goodfun.positionminitorjava.service.api.TushareClient;
 import com.goodfun.positionminitorjava.service.api.TushareResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class HistoryQuoteService {
 
+    private static final Logger logger = LoggerFactory.getLogger(HistoryQuoteService.class);
+
+
     @Autowired
     private TushareClient client;
 
+    @Value("${isDataInitialized}")
+    private boolean isDataInitialized;
 
     @Autowired
     private StockDailyDataRepository stockDailyDataRepository;
@@ -169,6 +170,36 @@ public class HistoryQuoteService {
         }
 
     }
+
+
+    public void updateStockDailyData() {
+        // 获取并保存最新数据的代码
+        LocalDate now = LocalDate.now();
+        LocalDate yesterday = now.minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        String tradeDate = yesterday.format(formatter);
+
+        getAndSaveStockDailyData( tradeDate);
+
+    }
+
+
+
+//    行情数据初始化
+    public void initStockDailyData() {
+        if (!isDataInitialized) {
+            logger.info("Stock daily data has already been initialized.");
+            return;
+        }
+
+        // 初始化数据的代码
+        getAndSaveAllStockDailyData();
+
+        isDataInitialized = false;
+        logger.info("Stock daily data initialization completed.");
+    }
+
 
     private StockDailyDataEntity convertModel2Entity(StockDailyData model){
         StockDailyDataEntity entity = new StockDailyDataEntity();
