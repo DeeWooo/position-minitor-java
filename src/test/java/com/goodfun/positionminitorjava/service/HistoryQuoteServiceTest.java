@@ -21,4 +21,11 @@ class HistoryQuoteServiceTest extends PositionMinitorJavaApplicationTests {
 
         historyQuoteService.getAndSaveStockDailyData(stockCode,startDate,endDate);
     }
+
+    @Test
+    void getAndSaveAllStockDailyData() {
+
+        historyQuoteService.getAndSaveAllStockDailyData();
+
+    }
 }

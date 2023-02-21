@@ -33,4 +33,13 @@ class TushareClientTest extends PositionMinitorJavaApplicationTests {
 
         response.getData().getItems();
     }
+
+    @Test
+    void getTradeCal() {
+        String startDate = "20230101";
+        String endDate = "20230219";
+        TushareResponse response = client.getTradeCal(startDate,endDate);
+
+//        System.out.println(response.getData().getItems());
+    }
 }

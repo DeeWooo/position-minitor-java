@@ -24,3 +24,12 @@ spring:
 
   mvc:
     static-path-pattern: /static/**
+
+
+pm:
+  param:
+#    dev-15900777503
+    tushareToken: 9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f
+#    prod-15300662389
+#    tushareToken: a17ec1c102ff651f3c74d55e8c4b01493cb84e4198f702627d055470
+    isDataInitialized: true

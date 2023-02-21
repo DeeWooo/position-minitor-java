@@ -9,6 +9,7 @@ import com.goodfun.positionminitorjava.model.StockDailyData;
 import com.goodfun.positionminitorjava.service.api.TushareClient;
 import com.goodfun.positionminitorjava.service.api.TushareResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class HistoryQuoteService {
 
     @Autowired
     private TushareClient client;
+
 
     @Autowired
     private StockDailyDataRepository stockDailyDataRepository;
@@ -63,15 +65,108 @@ public class HistoryQuoteService {
             StockDailyData stockDailyData = new StockDailyData (tsCode, tradeDate, openPrice, closePrice, highPrice, lowPrice, volume);
 
             StockDailyDataEntity entity = convertModel2Entity(stockDailyData);
-            stockDailyDataRepository.save(entity);
+            try {
+                stockDailyDataRepository.save(entity);
+            }
+            catch (Exception e){
+
+                System.out.println(e.toString());
+
+                continue;
+
+            }
 
         }
     }
 
 
-//    public void get
+    public void getAndSaveStockDailyData(String tradeDateStr){
+        TushareResponse response = client.getStockDailyData(tradeDateStr);
 
+        TushareResponse.ResponseDate datas = response.getData();
+
+        Object[] items = datas.getItems();
+
+        for (Object item : items) {
+
+            List data = (List) item;
+
+            String tsCode = data.get(0).toString();
+            BigDecimal openPrice = new BigDecimal(data.get(2).toString());
+            BigDecimal closePrice = new BigDecimal(data.get(3).toString());
+            BigDecimal highPrice = new BigDecimal(data.get(4).toString());
+            BigDecimal lowPrice = new BigDecimal(data.get(5).toString());
+            BigDecimal volume = new BigDecimal(data.get(6).toString());
+
+
+//            处理String的日期格式
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate localDate = LocalDate.parse(tradeDateStr, formatter);
+            Date tradeDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            StockDailyData stockDailyData = new StockDailyData (tsCode, tradeDate, openPrice, closePrice, highPrice, lowPrice, volume);
+
+            StockDailyDataEntity entity = convertModel2Entity(stockDailyData);
+            try {
+                stockDailyDataRepository.save(entity);
+            }
+            catch (Exception e){
+
+                System.out.println(e.toString());
+
+                continue;
+
+            }
+
+        }
+    }
+
+    /**
+     * 拉取近一月的数据
+     */
     public void getAndSaveAllStockDailyData(){
+
+        LocalDate now = LocalDate.now();
+        LocalDate oneYearAgo = now.minusYears(1);
+        LocalDate oneMonthAgo = now.minusMonths(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        //一年前
+//        String startDate = oneYearAgo.format(formatter);
+//        一月前
+        String startDate = oneMonthAgo.format(formatter);
+        String endDate = now.format(formatter);
+
+        getAndSaveAllStockDailyData(startDate, endDate);
+
+    }
+
+    public void getAndSaveAllStockDailyData(String startDate, String endDate){
+// 旧逻辑，用的是按code遍历，需要4000～5000次访问api
+
+//        获取A股所有公司代码
+//        TushareResponse.ResponseDate datas = client.getStockBasics().getData();
+//
+//        for (Object item : datas.getItems()) {
+//            List data = (List) item;
+//
+//            String tsCode = data.get(0).toString();
+//
+//            getAndSaveStockDailyData(tsCode,startDate,endDate);
+//        }
+
+        // 新逻辑  2023年02月21日
+
+        // 1. 获取交易日期列表
+        TushareResponse.ResponseDate data = client.getTradeCal(startDate,endDate).getData();
+
+        // 2. 逐日遍历保存
+        for (Object item : data.getItems()) {
+            List datas = (List) item;
+
+            String tradeDate = datas.get(0).toString();
+
+            getAndSaveStockDailyData(tradeDate);
+        }
 
     }
 
