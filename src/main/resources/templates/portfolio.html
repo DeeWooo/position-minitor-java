@@ -21,7 +21,14 @@
             $('#t2').load('portfolio-refresh');
         }
 
-
+        function toggleDiv() {
+            var div = document.getElementById("edit-buy");
+            if (div.style.display === "none") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        }
 
 
     </script>
@@ -29,6 +36,23 @@
 </head>
 <body>
 
+
+<div>
+    <!--    todo 开仓功能-->
+    <input type="button" id="open-positon" value="开仓/买入" onclick="toggleDiv()">
+
+</div>
+
+<div id="edit-buy" style="display: none">
+    <div>
+
+    </div>
+    <div>证券代码：<input type="text"/>  </div>
+    <div>投资组合：<input/></div>
+    <div>价格：<input/></div>
+    <div>数量：<input/></div>
+    <input type="button" id="save-record" value="保存" >
+</div>
 
 
 <div class="main-container">
