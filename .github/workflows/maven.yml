@@ -24,6 +24,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Step 1
+        run: echo Hello, world!
+      - name: Step 2
+        run: echo This is a debug message.
+        env:
+          ACTIONS_RUNNER_DEBUG: true
+
+
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
@@ -40,7 +49,7 @@ jobs:
             ${{ runner.os }}-maven-
       # Maven 打包
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package -DskipTests --file pom.xml
 
       # 将打包后的Jar包从Github Action服务器传输至私人服务器中
       - name: Transfer jar packets
