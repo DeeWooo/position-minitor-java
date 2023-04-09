@@ -65,8 +65,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           # 私有服务器用户密码
           password: ${{ secrets.PASSWORD }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
+          privateKey: ${{ secrets.KEY }}
+
       # 部署运行
       - name: Deploy
         uses: appleboy/ssh-action@master
