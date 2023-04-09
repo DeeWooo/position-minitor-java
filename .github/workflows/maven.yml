@@ -11,9 +11,9 @@ name: Java CI with Maven
 # 触发构建时机
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 # 任务
 jobs:
