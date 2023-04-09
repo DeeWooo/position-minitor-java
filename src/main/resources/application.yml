@@ -9,17 +9,11 @@ management:
         include: '*'
 
 spring:
+  profiles:
+    active: dev
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    dev
-#    url: jdbc:mysql://localhost:3306/stock_position
-#    username: dev
-#    password: dev
-#    prod
-    url: jdbc:mysql://rm-bp1qp12e2g8zgmfe94o.mysql.rds.aliyuncs.com:3306/stock_positon
-    username: position
-    password: position-dev-299
 
   jpa:
     hibernate:
@@ -49,9 +43,12 @@ logging:
 pm:
   param:
 #    dev-15900777503
-#    tushareToken: 9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f
+    tushareToken: 9897de9903a7ce04fa4b85bab5e531b6033d63e197faa87b7de5317f
 #    prod-15300662389
-    tushareToken: a17ec1c102ff651f3c74d55e8c4b01493cb84e4198f702627d055470
+#    tushareToken: a17ec1c102ff651f3c74d55e8c4b01493cb84e4198f702627d055470
+#    prod-15900959511
+#    tushareToken: 80290c33bdb09092f1e47bbd72722af5424af264d1d0ad32bf8ebb14
+
     isDataInitialized: false
 
 
