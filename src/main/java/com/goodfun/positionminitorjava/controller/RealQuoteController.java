@@ -1,16 +1,32 @@
 package com.goodfun.positionminitorjava.controller;
 
+import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
+
 import com.goodfun.positionminitorjava.service.PositionService;
 import com.goodfun.positionminitorjava.service.api.RealQuoteService;
+
+import cn.hutool.json.JSONUtil;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+
 @RestController
+@Validated // 开启控制器方法参数校验
 public class RealQuoteController {
+    private static final Logger logger = LoggerFactory.getLogger(RealQuoteController.class);  
 
     @Autowired
     private RealQuoteService realQuoteService;
@@ -39,7 +55,7 @@ public class RealQuoteController {
             realQuoteService.buildRealQuoteMap(code);
         });
 
-        System.out.println("装填行情map");
+        System.out.println("装填行情map完毕！");
     }
 
 
@@ -49,5 +65,18 @@ public class RealQuoteController {
         positionService.closePosition(tid);
 
     }
+
+
+    @PostMapping("/save-record")
+    public String saveRecord( @RequestBody @Valid PositionEntity positionEntity){
+        logger.info("positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
+
+        return "SUCESS!";
+
+    }
+
+
+
+    
 
 }

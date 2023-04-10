@@ -1,11 +1,11 @@
 package com.goodfun.positionminitorjava.model;
 
 import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
-import com.goodfun.positionminitorjava.global.Portfolio;
+
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.zip.DeflaterOutputStream;
+
 
 @Data
 public class PositionProfitLoss {

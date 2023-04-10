@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Access;
+
 
 /**
  * 定时任务
@@ -21,4 +21,10 @@ public class Jobs {
         System.out.println("20s定时任务");
         realQuoteController.refreshQuote();
     }
+
+
+
+
+
+    
 }
