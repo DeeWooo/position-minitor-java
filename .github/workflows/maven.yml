@@ -58,6 +58,7 @@ jobs:
           # 私有服务器用户密码
           # password: ${{ secrets.PASSWORD }}
           privateKey: ${{ secrets.PRIVATEKEY }}
+          port: ${{ secrets.PORT }}
 
       # 部署运行
       - name: Deploy
