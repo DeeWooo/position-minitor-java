@@ -25,14 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Step 1
-        run: echo Hello, world!
-      - name: Step 2
-        run: echo This is a debug message.
-        env:
-          ACTIONS_RUNNER_DEBUG: true
-
-
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
@@ -64,8 +56,8 @@ jobs:
           # 私有服务器用户名
           username: ${{ secrets.USERNAME }}
           # 私有服务器用户密码
-          password: ${{ secrets.PASSWORD }}
-          privateKey: ${{ secrets.KEY }}
+          # password: ${{ secrets.PASSWORD }}
+          privateKey: ${{ secrets.PRIVATEKEY }}
 
       # 部署运行
       - name: Deploy
