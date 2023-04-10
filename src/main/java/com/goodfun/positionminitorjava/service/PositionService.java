@@ -1,12 +1,17 @@
 package com.goodfun.positionminitorjava.service;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
+
 import com.goodfun.positionminitorjava.dao.PositionRepository;
 import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
 import com.goodfun.positionminitorjava.global.PositionStatus;
 import com.goodfun.positionminitorjava.global.Quote;
 import com.goodfun.positionminitorjava.model.PositionProfitLoss;
 import com.goodfun.positionminitorjava.util.CommonUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +22,19 @@ import java.util.stream.Collectors;
 @Service
 public class PositionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PositionService.class);  
+
+
     @Autowired
     private PositionRepository positionRepository;
+
+
+    public void saveRecord(PositionEntity positionEntity){
+        logger.debug("PositionService.saveRecord.positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
+
+        positionRepository.save(positionEntity);
+    }
+
 
     /**
      * 持仓盈亏现状

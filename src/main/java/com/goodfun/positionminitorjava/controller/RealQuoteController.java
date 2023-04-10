@@ -1,10 +1,12 @@
 package com.goodfun.positionminitorjava.controller;
 
+import com.alibaba.druid.sql.visitor.functions.Now;
 import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
-
+import com.goodfun.positionminitorjava.global.PositionStatus;
 import com.goodfun.positionminitorjava.service.PositionService;
 import com.goodfun.positionminitorjava.service.api.RealQuoteService;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 
 
@@ -69,8 +71,11 @@ public class RealQuoteController {
 
     @PostMapping("/save-record")
     public String saveRecord( @RequestBody @Valid PositionEntity positionEntity){
-        logger.info("positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
+        // logger.info("positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
+        positionEntity.setBuyInDate(DateUtil.date());
+        positionEntity.setStatus(PositionStatus.POSITION);
 
+        positionService.saveRecord(positionEntity);
         return "SUCESS!";
 
     }

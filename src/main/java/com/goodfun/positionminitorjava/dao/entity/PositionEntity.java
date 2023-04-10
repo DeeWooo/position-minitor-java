@@ -17,7 +17,7 @@ import java.util.Date;
 public class PositionEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 指定使用数据库生成主键，可以保证唯一性
     private Long id;
 
     @Column(name = "code")
