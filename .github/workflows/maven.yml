@@ -53,7 +53,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATEKEY }}
           # passphrase: ${{ secrets.SSH_PASSWORD }} <-- This was missing
-          rm: true
+          # rm: true
 
 
       # 部署运行
@@ -69,9 +69,9 @@ jobs:
           script: |
             cd /opt/java-app
             ps -ef | grep  position-minitor-java-0.0.1-SNAPSHOT.jar | grep -v grep | awk '{print $2}' | xargs kill -9
-            # nohup java -jar /opt/java-app/position-minitor-java-0.0.1-SNAPSHOT.jar > nohup.out &
-            # nohup java -jar /opt/java-app/position-minitor-java-0.0.1-SNAPSHOT.jar  > runtime.log 2>&1 &
-            nohup java -jar position-minitor-java-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod >> ./logs/nohup.log 2>&1 &
+            # nohup java -jar /opt/java-app/target/position-minitor-java-0.0.1-SNAPSHOT.jar > nohup.out &
+            # nohup java -jar /opt/java-app/target/position-minitor-java-0.0.1-SNAPSHOT.jar  > runtime.log 2>&1 &
+            nohup java -jar /opt/java-app/target/position-minitor-java-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod >> ./logs/nohup.log 2>&1 &
             pwd
 
 
