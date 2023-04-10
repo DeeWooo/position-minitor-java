@@ -45,20 +45,33 @@ jobs:
 
       # 将打包后的Jar包从Github Action服务器传输至私人服务器中
       - name: Transfer jar packets
-        uses: garygrossgarten/github-action-scp@release
+        # uses: garygrossgarten/github-action-scp@release
+        # with:
+        #   # Github Action 的服务器文件路径
+        #   local: target/position-minitor-java-0.0.1-SNAPSHOT.jar
+        #   # 私有服务器文件路径
+        #   remote: /opt/java-app/position-minitor-java-0.0.1-SNAPSHOT.jar
+        #   # 私有服务器公网IP地址
+        #   host: ${{ secrets.HOST }}
+        #   # port: ${{secrets.PORT}} 默认22
+        #   # 私有服务器用户名
+        #   username: ${{ secrets.USERNAME }}
+        #   # 私有服务器用户密码
+        #   # password: ${{ secrets.PASSWORD }}
+        #   privateKey: ${{ secrets.PRIVATEKEY }}
+
+
+
+        uses: appleboy/scp-action@master
         with:
-          # Github Action 的服务器文件路径
-          local: target/position-minitor-java-0.0.1-SNAPSHOT.jar
-          # 私有服务器文件路径
-          remote: /opt/java-app/position-minitor-java-0.0.1-SNAPSHOT.jar
-          # 私有服务器公网IP地址
+          source: target/position-minitor-java-0.0.1-SNAPSHOT.jar
+          target: /opt/java-app/position-minitor-java-0.0.1-SNAPSHOT.jar
           host: ${{ secrets.HOST }}
-          # 私有服务器用户名
           username: ${{ secrets.USERNAME }}
-          # 私有服务器用户密码
-          # password: ${{ secrets.PASSWORD }}
-          privateKey: ${{ secrets.PRIVATEKEY }}
-          port: ${{ secrets.PORT }}
+          key: ${{ secrets.PRIVATEKEY }}
+          # passphrase: ${{ secrets.SSH_PASSWORD }} <-- This was missing
+          rm: true
+
 
       # 部署运行
       - name: Deploy
