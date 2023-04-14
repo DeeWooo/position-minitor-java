@@ -1,7 +1,8 @@
 package com.goodfun.positionminitorjava.controller;
 
-import com.alibaba.druid.sql.visitor.functions.Now;
+
 import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
+
 import com.goodfun.positionminitorjava.global.PositionStatus;
 import com.goodfun.positionminitorjava.service.PositionService;
 import com.goodfun.positionminitorjava.service.api.RealQuoteService;
@@ -9,16 +10,17 @@ import com.goodfun.positionminitorjava.service.api.RealQuoteService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
@@ -71,14 +73,16 @@ public class RealQuoteController {
 
     @PostMapping("/save-record")
     public String saveRecord( @RequestBody @Valid PositionEntity positionEntity){
-        // logger.info("positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
+//        logger.info("positionEntity-----------" + JSONUtil.toJsonStr(positionEntity));
         positionEntity.setBuyInDate(DateUtil.date());
         positionEntity.setStatus(PositionStatus.POSITION);
 
-        positionService.saveRecord(positionEntity);
+         positionService.saveRecord(positionEntity);
         return "SUCESS!";
 
     }
+
+    // 投资组合列表
 
 
 

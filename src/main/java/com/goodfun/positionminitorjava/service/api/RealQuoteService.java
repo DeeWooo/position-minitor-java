@@ -1,8 +1,11 @@
 package com.goodfun.positionminitorjava.service.api;
 
+import com.goodfun.positionminitorjava.controller.RealQuoteController;
 import com.goodfun.positionminitorjava.global.PositionStatus;
 import com.goodfun.positionminitorjava.global.Quote;
 import com.goodfun.positionminitorjava.model.RealQuote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +24,9 @@ import java.util.regex.Pattern;
  */
 @Service
 public class RealQuoteService {
+    private static final Logger logger = LoggerFactory.getLogger(RealQuoteService.class);
+
+
 
     private String stockUrl = "http://qt.gtimg.cn/q={code}";
 
@@ -71,7 +77,7 @@ public class RealQuoteService {
 
 
     private RealQuote getRealQuote(String code){
-
+//        logger.info("getRealQuote(String code)~~~~~"+code);
         //访问api
         String result = getOneStockRealQuoteFromAPI(code);
 

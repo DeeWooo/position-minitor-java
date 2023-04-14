@@ -39,12 +39,12 @@
         var position = {
             code: $("#codeInput").val(),
             name: $("#nameInput").val(),
-            portfolio: $("#portfolioInput").val(),
+            portfolio: $("#selected-portfolio").val(),
             buyInPrice: $("#priceInput").val(),
             number: $("#numberInput").val()
         };
 
-        // alert(JSON.stringify(position));
+        alert(JSON.stringify(position));
 
         $.ajax({
             type: "POST",
@@ -63,10 +63,30 @@
       };
 
     </script>
+
+      <script th:inline="javascript">
+        function onPortfolioChanged() {
+          // 获取下拉框元素
+          var portfolioSelect = $("#portfolio");
+           // 获取当前选中的枚举值
+          var selectedPortfolio = portfolioSelect.val();
+
+          alert(selectedPortfolio);
+
+          // 把选中的值赋给隐藏的 input 元素
+ 
+          $("#selected-portfolio").val(selectedPortfolio);
+   
+
+          alert($("#selected-portfolio").val() );
+        
+        }
+      </script>
+  
   </head>
   <body>
     <div>
-      <!--    todo 开仓功能-->
+
       <input type="button" id="open-positon" value="开仓/买入" onclick="toggleDiv()" />
     </div>
     <div id="edit-buy" style="display: none">
@@ -74,7 +94,16 @@
         <div class="layui-col-xs4">
           <div>证券代码：<input type="text" id="codeInput" /></div>
           <div>证券名称：<input type="text" id="nameInput" /></div>
-          <div>投资组合：<input type="text" id="portfolioInput" /></div>
+          <div>投资组合：
+            <select id="portfolio" onchange="onPortfolioChanged()">
+              <option th:each="portfolio : ${T(com.goodfun.positionminitorjava.global.Portfolio).values()}"
+                      th:value="${portfolio}"
+                      th:text="${portfolio.info}"
+                      th:selected="${portfolio == selectedPortfolio}"></option>
+            </select>
+            <input type="hidden" id="selected-portfolio" name="selectedPortfolio" value="" />
+          </div>
+          
         </div>
         <div class="layui-col-xs4">
           <div>价格：<input type="text" id="priceInput" /></div>

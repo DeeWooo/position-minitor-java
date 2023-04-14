@@ -1,6 +1,6 @@
 package com.goodfun.positionminitorjava.model;
 
-import com.goodfun.positionminitorjava.dao.entity.PositionEntity;
+
 import lombok.Data;
 
 import java.math.BigDecimal;

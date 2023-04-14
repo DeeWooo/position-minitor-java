@@ -13,7 +13,7 @@ import com.goodfun.positionminitorjava.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +26,10 @@ public class PortfolioService {
 
     @Autowired
     private PositionService positionService;
+
+
+//     投资组合列表
+//     public void portfolioList()
 
 
     public List<PortfolioProfitLoss> show(){
