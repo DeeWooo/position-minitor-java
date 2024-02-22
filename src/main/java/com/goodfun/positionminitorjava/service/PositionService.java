@@ -94,9 +94,12 @@ public class PositionService {
             }
         }
         positionProfitLoss.setRealPrice(realPrice);
-        BigDecimal profitLoss =realPrice.subtract(entity.getBuyInPrice()).multiply(BigDecimal.valueOf(entity.getNumber()));
 
-        positionProfitLoss.setProfitLoss(profitLoss);
+        if (realPrice != null && entity.getBuyInPrice() != null) {
+            BigDecimal profitLoss = realPrice.subtract(entity.getBuyInPrice()).multiply(BigDecimal.valueOf(entity.getNumber()));
+            positionProfitLoss.setProfitLoss(profitLoss);
+        }
+       
 
         BigDecimal  profitLossRate = BigDecimal.ZERO;
 
